@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Get references to various DOM elements
     const baseCurrencySelect = document.getElementById('base-currency');
     const targetCurrencySelect = document.getElementById('target-currency');
     const amountInput = document.getElementById('amount');
@@ -10,9 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveFavoriteButton = document.getElementById('save-favorite');
     const clearFavoritesButton = document.getElementById('clear-favorites');
     const favoriteCurrencyPairsContainer = document.getElementById('favorite-currency-pairs');
+    
+    // Define API key and base URL
     const apiKey = 'fca_live_WSA9TWXvazZjVhTkpLqnvUY8rnl5ekqmFtfDKo3v';
     const apiBaseURL = 'https://api.freecurrencyapi.com/v1';
 
+    // Set up headers for the API request
     const myHeaders = new Headers();
     myHeaders.append("apikey", apiKey);
 
@@ -22,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: myHeaders
     };
 
+    // Fetch available currencies and populate the select options
     const fetchCurrencies = async () => {
         try {
             const response = await fetch(`${apiBaseURL}/currencies?apikey=${apiKey}`, requestOptions);
@@ -32,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Populate the currency select elements with options
     const populateCurrencyOptions = (currencies) => {
         Object.keys(currencies).forEach(currency => {
             const option1 = document.createElement('option');
@@ -46,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
+    // Convert currency using the API and display the result
     const convertCurrency = async () => {
         const baseCurrency = baseCurrencySelect.value;
         const targetCurrency = targetCurrencySelect.value;
@@ -67,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Fetch historical rates and display the result
     const fetchHistoricalRates = async () => {
         const baseCurrency = baseCurrencySelect.value;
         const targetCurrency = targetCurrencySelect.value;
@@ -93,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Save the selected currency pair as a favorite
     const saveFavoritePair = async () => {
         const baseCurrency = baseCurrencySelect.value;
         const targetCurrency = targetCurrencySelect.value;
@@ -113,7 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const clearFavoritePairs = async () => { // New function to clear favorite pairs
+    // Clear all favorite currency pairs
+    const clearFavoritePairs = async () => {
         try {
             await fetch('/api/favorites', {
                 method: 'DELETE'
@@ -124,6 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Display the saved favorite currency pairs
     const displayFavoritePairs = async () => {
         favoriteCurrencyPairsContainer.innerHTML = '';
         try {
@@ -144,11 +155,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Add event listeners to buttons
     convertButton.addEventListener('click', convertCurrency);
     historicalRatesButton.addEventListener('click', fetchHistoricalRates);
     saveFavoriteButton.addEventListener('click', saveFavoritePair);
-    clearFavoritesButton.addEventListener('click', clearFavoritePairs); 
+    clearFavoritesButton.addEventListener('click', clearFavoritePairs);
 
+    // Fetch and display initial data
     fetchCurrencies();
     displayFavoritePairs();
 });
